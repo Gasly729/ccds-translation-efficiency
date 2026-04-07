@@ -1,0 +1,192 @@
+# ============================================================================
+# references.yaml — 全量物种参考索引路径配置
+#
+# 路径均相对于 reference/ 目录。
+# filter:             Bowtie2 索引 (rtRNA/rRNA 过滤)
+# transcriptome:      Bowtie2 索引 (转录组比对)
+# regions:            BED 文件 (CDS/UTR 区域定义)
+# transcript_lengths: TSV 文件 (转录本长度)
+#
+# ★ 索引路径已通过扫描 reference/filter/ 和 reference/transcriptome/
+#   目录实际文件验证。
+# ============================================================================
+
+# ── 已有索引的 21 个物种 ────────────────────────────────────────────────────
+
+"homo sapiens":
+  folder_name: "human"
+  filter: "filter/human/human_rtRNA*"
+  transcriptome: "transcriptome/human/appris_human_v2_selected*"
+  regions: "transcriptome/human/appris_human_v2_actual_regions.bed"
+  transcript_lengths: "transcriptome/human/appris_human_v2_transcript_lengths.tsv"
+
+"mus musculus":
+  folder_name: "mouse"
+  filter: "filter/mouse/mouse_rtRNA*"
+  transcriptome: "transcriptome/mouse/appris_mouse_v2_selected*"
+  regions: "transcriptome/mouse/appris_mouse_v2_actual_regions.bed"
+  transcript_lengths: "transcriptome/mouse/appris_mouse_v2_transcript_lengths.tsv"
+
+"arabidopsis thaliana":
+  folder_name: "arabidopsis"
+  filter: "filter/arabidopsis/trna_rrna_seqs.fa*"
+  transcriptome: "transcriptome/arabidopsis/mrna_seqs_unique_genes.fa*"
+  regions: "transcriptome/arabidopsis/mrna_regions_unique_genes.bed"
+  transcript_lengths: "transcriptome/arabidopsis/mrna_lengths_unique_genes.tsv"
+
+"caenorhabditis elegans":
+  folder_name: "celegans"
+  filter: "filter/celegans/celegans_rRNA_new*"
+  transcriptome: "transcriptome/celegans/c_elegans_ref_selected*"
+  regions: "transcriptome/celegans/c_elegans_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/celegans/c_elegans_ref_transcript_lengths.tsv"
+
+"rattus norvegicus":
+  folder_name: "rattus_norvegicus"
+  filter: "filter/rattus_norvegicus/rattus_norvegicus_rtRNA*"
+  transcriptome: "transcriptome/rattus_norvegicus/r_norvegicus_ref_selected*"
+  regions: "transcriptome/rattus_norvegicus/r_norvegicus_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/rattus_norvegicus/r_norvegicus_ref_transcript_lengths.tsv"
+
+"danio rerio":
+  folder_name: "danio_rerio"
+  filter: "filter/danio_rerio/danio_rerio_rtRNA*"
+  transcriptome: "transcriptome/danio_rerio/d_rerio_ref_selected*"
+  regions: "transcriptome/danio_rerio/d_rerio_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/danio_rerio/d_rerio_ref_transcript_lengths.tsv"
+
+"drosophila melanogaster":
+  folder_name: "drosophila_melanogaster"
+  filter: "filter/drosophila_melanogaster/drosophila_melanogaster_rtRNA*"
+  transcriptome: "transcriptome/drosophila_melanogaster/d_melanogaster_ref_selected*"
+  regions: "transcriptome/drosophila_melanogaster/d_melanogaster_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/drosophila_melanogaster/d_melanogaster_ref_transcript_lengths.tsv"
+
+"saccharomyces cerevisiae":
+  folder_name: "saccharomyces_cerevisiae"
+  filter: "filter/saccharomyces_cerevisiae/saccharomyces_cerevisiae_rtRNA*"
+  transcriptome: "transcriptome/saccharomyces_cerevisiae/s_cerevisiae_ref_selected*"
+  regions: "transcriptome/saccharomyces_cerevisiae/s_cerevisiae_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/saccharomyces_cerevisiae/s_cerevisiae_ref_transcript_lengths.tsv"
+
+"schizosaccharomyces pombe":
+  folder_name: "schizosaccharomyces_pombe"
+  filter: "filter/schizosaccharomyces_pombe/schizosaccharomyces_pombe_rtRNA*"
+  transcriptome: "transcriptome/schizosaccharomyces_pombe/s_pombe_ref_selected*"
+  regions: "transcriptome/schizosaccharomyces_pombe/s_pombe_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/schizosaccharomyces_pombe/s_pombe_ref_transcript_lengths.tsv"
+
+"escherichia coli":
+  folder_name: "escherichia_coli"
+  filter: "filter/escherichia_coli/escherichia_coli_rtRNA*"
+  transcriptome: "transcriptome/escherichia_coli/e_coli_ref_selected*"
+  regions: "transcriptome/escherichia_coli/e_coli_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/escherichia_coli/e_coli_ref_transcript_lengths.tsv"
+
+"xenopus laevis":
+  folder_name: "xenopus_laevis"
+  filter: "filter/xenopus_laevis/xenopus_laevis_rtRNA*"
+  transcriptome: "transcriptome/xenopus_laevis/x_laevis_ref_selected*"
+  regions: "transcriptome/xenopus_laevis/x_laevis_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/xenopus_laevis/x_laevis_ref_transcript_lengths.tsv"
+
+"zea mays":
+  folder_name: "zea_mays"
+  filter: "filter/zea_mays/zea_mays_rtRNA*"
+  transcriptome: "transcriptome/zea_mays/z_mays_ref_selected*"
+  regions: "transcriptome/zea_mays/z_mays_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/zea_mays/z_mays_ref_transcript_lengths.tsv"
+
+"trypanosoma brucei":
+  folder_name: "trypanosoma_brucei"
+  filter: "filter/trypanosoma_brucei/trypanosoma_brucei_rtRNA*"
+  transcriptome: "transcriptome/trypanosoma_brucei/t_brucei_ref_selected*"
+  regions: "transcriptome/trypanosoma_brucei/t_brucei_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/trypanosoma_brucei/t_brucei_ref_transcript_lengths.tsv"
+
+"plasmodium falciparum":
+  folder_name: "plasmodium_falciparum"
+  filter: "filter/plasmodium_falciparum/plasmodium_falciparum_rtRNA*"
+  transcriptome: "transcriptome/plasmodium_falciparum/p_falciparum_ref_selected*"
+  regions: "transcriptome/plasmodium_falciparum/p_falciparum_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/plasmodium_falciparum/p_falciparum_ref_transcript_lengths.tsv"
+
+"leishmania donovani":
+  folder_name: "leishmania_donovani"
+  filter: "filter/leishmania_donovani/leishmania_donovani_rtRNA*"
+  transcriptome: "transcriptome/leishmania_donovani/l_donovani_ref_selected*"
+  regions: "transcriptome/leishmania_donovani/l_donovani_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/leishmania_donovani/l_donovani_ref_transcript_lengths.tsv"
+
+"candida albicans":
+  folder_name: "candida_albicans"
+  filter: "filter/candida_albicans/candida_albicans_rtRNA*"
+  transcriptome: "transcriptome/candida_albicans/c_albicans_ref_selected*"
+  regions: "transcriptome/candida_albicans/c_albicans_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/candida_albicans/c_albicans_ref_transcript_lengths.tsv"
+
+"staphylococcus aureus":
+  folder_name: "staphylococcus_aureus"
+  filter: "filter/staphylococcus_aureus/staphylococcus_aureus_rtRNA*"
+  transcriptome: "transcriptome/staphylococcus_aureus/s_aureus_ref_selected*"
+  regions: "transcriptome/staphylococcus_aureus/s_aureus_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/staphylococcus_aureus/s_aureus_ref_transcript_lengths.tsv"
+
+"streptomyces clavuligerus":
+  folder_name: "streptomyces_clavuligerus"
+  filter: "filter/streptomyces_clavuligerus/streptomyces_clavuligerus_rtRNA*"
+  transcriptome: "transcriptome/streptomyces_clavuligerus/s_clavuligerus_ref_selected*"
+  regions: "transcriptome/streptomyces_clavuligerus/s_clavuligerus_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/streptomyces_clavuligerus/s_clavuligerus_ref_transcript_lengths.tsv"
+
+"caenorhabditis brenneri":
+  folder_name: "caenorhabditis_brenneri"
+  filter: "filter/caenorhabditis_brenneri/caenorhabditis_brenneri_rtRNA*"
+  transcriptome: "transcriptome/caenorhabditis_brenneri/c_brenneri_ref_selected*"
+  regions: "transcriptome/caenorhabditis_brenneri/c_brenneri_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/caenorhabditis_brenneri/c_brenneri_ref_transcript_lengths.tsv"
+
+"caenorhabditis briggsae":
+  folder_name: "caenorhabditis_briggsae"
+  filter: "filter/caenorhabditis_briggsae/caenorhabditis_briggsae_rtRNA*"
+  transcriptome: "transcriptome/caenorhabditis_briggsae/c_briggsae_ref_selected*"
+  regions: "transcriptome/caenorhabditis_briggsae/c_briggsae_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/caenorhabditis_briggsae/c_briggsae_ref_transcript_lengths.tsv"
+
+"caenorhabditis remanei":
+  folder_name: "caenorhabditis_remanei"
+  filter: "filter/caenorhabditis_remanei/caenorhabditis_remanei_rtRNA*"
+  transcriptome: "transcriptome/caenorhabditis_remanei/c_remanei_ref_selected*"
+  regions: "transcriptome/caenorhabditis_remanei/c_remanei_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/caenorhabditis_remanei/c_remanei_ref_transcript_lengths.tsv"
+
+"saccharomyces paradoxus":
+  folder_name: "saccharomyces_paradoxus"
+  filter: "filter/saccharomyces_paradoxus/saccharomyces_paradoxus_rtRNA*"
+  transcriptome: "transcriptome/saccharomyces_paradoxus/s_paradoxus_ref_selected*"
+  regions: "transcriptome/saccharomyces_paradoxus/s_paradoxus_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/saccharomyces_paradoxus/s_paradoxus_ref_transcript_lengths.tsv"
+
+"saccharomyces uvarum":
+  folder_name: "saccharomyces_uvarum"
+  filter: "filter/saccharomyces_uvarum/saccharomyces_uvarum_rtRNA*"
+  transcriptome: "transcriptome/saccharomyces_uvarum/s_uvarum_ref_selected*"
+  regions: "transcriptome/saccharomyces_uvarum/s_uvarum_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/saccharomyces_uvarum/s_uvarum_ref_transcript_lengths.tsv"
+
+# ── 业务目标物种 (索引待构建, 路径占位) ──────────────────────────────────────
+# ★ 使用前必须先构建 Bowtie2 索引并放入对应目录
+
+"bombyx mori":
+  folder_name: "bombyx_mori"
+  filter: "filter/bombyx_mori/bombyx_mori_rtRNA*"
+  transcriptome: "transcriptome/bombyx_mori/b_mori_ref_selected*"
+  regions: "transcriptome/bombyx_mori/b_mori_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/bombyx_mori/b_mori_ref_transcript_lengths.tsv"
+
+"spider_species":
+  folder_name: "spider"
+  filter: "filter/spider/spider_rtRNA*"
+  transcriptome: "transcriptome/spider/spider_ref_selected*"
+  regions: "transcriptome/spider/spider_ref_actual_regions.bed"
+  transcript_lengths: "transcriptome/spider/spider_ref_transcript_lengths.tsv"

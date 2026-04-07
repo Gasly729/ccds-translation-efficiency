@@ -1,0 +1,403 @@
+Apr-07 13:28:12.356 [main] DEBUG nextflow.cli.Launcher - Setting HTTP proxy: [100.87.42.54, 7890]
+Apr-07 13:28:12.415 [main] DEBUG nextflow.cli.Launcher - Setting HTTPS proxy: [100.87.42.54, 7890]
+Apr-07 13:28:12.415 [main] DEBUG nextflow.cli.Launcher - Setting http proxy: [100.87.42.54, 7890]
+Apr-07 13:28:12.416 [main] DEBUG nextflow.cli.Launcher - Setting https proxy: [100.87.42.54, 7890]
+Apr-07 13:28:12.416 [main] DEBUG nextflow.cli.Launcher - $> nextflow riboflow/RiboFlow.groovy -params-file ../../data/interim/modified_project/GSE48140/GSE48140_modified.yaml -profile stampede_local -with-trace nextflow_logs/GSE48140_trace.txt -with-report nextflow_logs/GSE48140_report.html -with-timeline nextflow_logs/GSE48140_timeline.html
+Apr-07 13:28:12.454 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 19.04.1
+Apr-07 13:28:12.483 [main] INFO  nextflow.cli.CmdRun - Launching `riboflow/RiboFlow.groovy` [maniac_gutenberg] - revision: a25f57cabc
+Apr-07 13:28:12.501 [main] DEBUG nextflow.config.ConfigBuilder - Found config base: /home/xrx/my_project/project/workflow/snakescale/riboflow/nextflow.config
+Apr-07 13:28:12.502 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/xrx/my_project/project/workflow/snakescale/riboflow/nextflow.config
+Apr-07 13:28:12.534 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `stampede_local`
+Apr-07 13:28:13.482 [main] DEBUG nextflow.config.ConfigBuilder - Available config profiles: [standard, stampede_local, docker_local]
+Apr-07 13:28:13.584 [main] DEBUG nextflow.Session - Session uuid: 8223e304-5df1-40fd-bb7e-d19244347307
+Apr-07 13:28:13.584 [main] DEBUG nextflow.Session - Run name: maniac_gutenberg
+Apr-07 13:28:13.585 [main] DEBUG nextflow.Session - Executor pool size: 208
+Apr-07 13:28:13.621 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 19.04.1 build 5072
+  Modified: 03-05-2019 12:29 UTC (20:29 CDT)
+  System: Linux 6.8.0-90-generic
+  Runtime: Groovy 2.5.6 on OpenJDK 64-Bit Server VM 1.8.0_472-b08
+  Encoding: UTF-8 (UTF-8)
+  Process: 3850147@dell-PowerEdge-R940xa [127.0.1.1]
+  CPUs: 208 - Mem: 1.2 TB (18.4 GB) - Swap: 2 GB (1.9 GB)
+Apr-07 13:28:13.649 [main] DEBUG nextflow.Session - Work-dir: /home/xrx/my_project/project/workflow/snakescale/work [ext2/ext3]
+Apr-07 13:28:13.649 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /home/xrx/my_project/project/workflow/snakescale/riboflow/bin
+Apr-07 13:28:14.063 [main] DEBUG nextflow.Session - Session start invoked
+Apr-07 13:28:14.071 [main] DEBUG nextflow.processor.TaskDispatcher - Dispatcher > start
+Apr-07 13:28:14.072 [main] DEBUG nextflow.trace.TraceFileObserver - Flow starting -- trace file: /home/xrx/my_project/project/workflow/snakescale/nextflow_logs/trace.txt
+Apr-07 13:28:14.089 [main] DEBUG nextflow.script.ScriptRunner - > Script parsing
+Apr-07 13:28:16.887 [main] WARN  nextflow.Session - There's no process matching config selector: md5sum
+Apr-07 13:28:16.888 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Apr-07 13:28:17.110 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.110 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.117 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.119 [main] INFO  nextflow.executor.Executor - [warm up] executor > local
+Apr-07 13:28:17.124 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=48; memory=1.2 TB; capacity=208; pollInterval=100ms; dumpInterval=5m
+Apr-07 13:28:17.128 [main] DEBUG nextflow.processor.TaskDispatcher - Starting monitor: LocalPollingMonitor
+Apr-07 13:28:17.129 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: local)
+Apr-07 13:28:17.131 [main] DEBUG nextflow.executor.Executor - Invoke register for executor: local
+Apr-07 13:28:17.164 [main] DEBUG nextflow.Session - >>> barrier register (process: write_fastq_correspondence)
+Apr-07 13:28:17.166 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > write_fastq_correspondence -- maxForks: 208
+Apr-07 13:28:17.295 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.296 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.296 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.298 [main] DEBUG nextflow.Session - >>> barrier register (process: raw_fastqc)
+Apr-07 13:28:17.298 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > raw_fastqc -- maxForks: 208
+Apr-07 13:28:17.300 [Actor Thread 3] DEBUG nextflow.sort.BigSort - Sort completed -- entries: 1; slices: 1; internal sort time: 0.002 s; external sort time: 0.019 s; total time: 0.021 s
+Apr-07 13:28:17.311 [Actor Thread 3] DEBUG nextflow.file.FileCollector - Saved collect-files list to: /tmp/e7a4862160136fd4333cf3b449eab535.collect-file
+Apr-07 13:28:17.324 [main] DEBUG nextflow.util.CacheHelper - Config settings `withName:clip` matches process clip
+Apr-07 13:28:17.328 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.336 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.337 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.338 [main] DEBUG nextflow.Session - >>> barrier register (process: clip)
+Apr-07 13:28:17.338 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > clip -- maxForks: 208
+Apr-07 13:28:17.354 [Actor Thread 3] DEBUG nextflow.file.FileCollector - Deleting file collector temp dir: /tmp/nxf-1094726149908623591
+Apr-07 13:28:17.361 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.362 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.362 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.363 [main] DEBUG nextflow.Session - >>> barrier register (process: clipped_fastqc)
+Apr-07 13:28:17.364 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > clipped_fastqc -- maxForks: 208
+Apr-07 13:28:17.415 [main] DEBUG nextflow.util.CacheHelper - Config settings `withName:filter` matches process filter
+Apr-07 13:28:17.417 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.417 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.417 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.418 [main] DEBUG nextflow.Session - >>> barrier register (process: filter)
+Apr-07 13:28:17.418 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > filter -- maxForks: 208
+Apr-07 13:28:17.454 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [skipping] Stored process > clip (1)
+Apr-07 13:28:17.471 [Actor Thread 1] DEBUG nextflow.Session - <<< barrier arrive (process: clip)
+Apr-07 13:28:17.475 [main] DEBUG nextflow.util.CacheHelper - Config settings `withName:transcriptome_alignment` matches process transcriptome_alignment
+Apr-07 13:28:17.476 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.476 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.476 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.480 [main] DEBUG nextflow.Session - >>> barrier register (process: transcriptome_alignment)
+Apr-07 13:28:17.480 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > transcriptome_alignment -- maxForks: 208
+Apr-07 13:28:17.502 [Actor Thread 8] INFO  nextflow.processor.TaskProcessor - [skipping] Stored process > filter (1)
+Apr-07 13:28:17.505 [main] DEBUG nextflow.util.CacheHelper - Config settings `withName:quality_filter` matches process quality_filter
+Apr-07 13:28:17.506 [Actor Thread 1] DEBUG nextflow.Session - <<< barrier arrive (process: filter)
+Apr-07 13:28:17.507 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.507 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.507 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.509 [main] DEBUG nextflow.Session - >>> barrier register (process: quality_filter)
+Apr-07 13:28:17.510 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > quality_filter -- maxForks: 208
+Apr-07 13:28:17.522 [Actor Thread 4] INFO  nextflow.processor.TaskProcessor - [skipping] Stored process > transcriptome_alignment (1)
+Apr-07 13:28:17.528 [Actor Thread 1] DEBUG nextflow.Session - <<< barrier arrive (process: transcriptome_alignment)
+Apr-07 13:28:17.543 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [skipping] Stored process > quality_filter (1)
+Apr-07 13:28:17.548 [Actor Thread 5] DEBUG nextflow.Session - <<< barrier arrive (process: quality_filter)
+Apr-07 13:28:17.589 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.589 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.589 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.591 [main] DEBUG nextflow.Session - >>> barrier register (process: merge_transcriptome_alignment)
+Apr-07 13:28:17.591 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > merge_transcriptome_alignment -- maxForks: 208
+Apr-07 13:28:17.592 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-07 13:28:17.600 [Task submitter] INFO  nextflow.Session - [63/bdd4b3] Submitted process > clipped_fastqc (1)
+Apr-07 13:28:17.602 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.602 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.602 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.603 [main] DEBUG nextflow.Session - >>> barrier register (process: transcriptome_aligned_individual_fastqc)
+Apr-07 13:28:17.604 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > transcriptome_aligned_individual_fastqc -- maxForks: 208
+Apr-07 13:28:17.610 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.610 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.610 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.611 [main] DEBUG nextflow.Session - >>> barrier register (process: transcriptome_unaligned_individual_fastqc)
+Apr-07 13:28:17.611 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > transcriptome_unaligned_individual_fastqc -- maxForks: 208
+Apr-07 13:28:17.618 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.618 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.618 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.619 [main] DEBUG nextflow.Session - >>> barrier register (process: bam_to_bed)
+Apr-07 13:28:17.619 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > bam_to_bed -- maxForks: 208
+Apr-07 13:28:17.627 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-07 13:28:17.627 [Actor Thread 2] INFO  nextflow.processor.TaskProcessor - [skipping] Stored process > bam_to_bed (1)
+Apr-07 13:28:17.627 [Task submitter] INFO  nextflow.Session - [1b/0b1555] Submitted process > raw_fastqc (1)
+Apr-07 13:28:17.628 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.630 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.631 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.631 [Actor Thread 1] DEBUG nextflow.Session - <<< barrier arrive (process: bam_to_bed)
+Apr-07 13:28:17.632 [main] DEBUG nextflow.Session - >>> barrier register (process: add_sample_index_col_to_bed)
+Apr-07 13:28:17.633 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > add_sample_index_col_to_bed -- maxForks: 208
+Apr-07 13:28:17.639 [Actor Thread 2] INFO  nextflow.processor.TaskProcessor - [skipping] Stored process > add_sample_index_col_to_bed (1)
+Apr-07 13:28:17.639 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.640 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.640 [Actor Thread 1] DEBUG nextflow.Session - <<< barrier arrive (process: add_sample_index_col_to_bed)
+Apr-07 13:28:17.640 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.641 [main] DEBUG nextflow.Session - >>> barrier register (process: merge_bed)
+Apr-07 13:28:17.641 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > merge_bed -- maxForks: 208
+Apr-07 13:28:17.642 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-07 13:28:17.643 [Task submitter] INFO  nextflow.Session - [26/692aa1] Submitted process > write_fastq_correspondence (1)
+Apr-07 13:28:17.646 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [skipping] Stored process > merge_bed (1)
+Apr-07 13:28:17.647 [Actor Thread 1] DEBUG nextflow.Session - <<< barrier arrive (process: merge_bed)
+Apr-07 13:28:17.649 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.649 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.649 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.651 [main] DEBUG nextflow.Session - >>> barrier register (process: deduplicate)
+Apr-07 13:28:17.652 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > deduplicate -- maxForks: 208
+Apr-07 13:28:17.656 [Actor Thread 1] DEBUG nextflow.Session - <<< barrier arrive (process: deduplicate)
+Apr-07 13:28:17.660 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-07 13:28:17.661 [Task submitter] INFO  nextflow.Session - [64/f5231c] Submitted process > merge_transcriptome_alignment (1)
+Apr-07 13:28:17.671 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.672 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.672 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.672 [main] DEBUG nextflow.Session - >>> barrier register (process: separate_bed_post_dedup)
+Apr-07 13:28:17.673 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > separate_bed_post_dedup -- maxForks: 208
+Apr-07 13:28:17.675 [Actor Thread 1] DEBUG nextflow.Session - <<< barrier arrive (process: separate_bed_post_dedup)
+Apr-07 13:28:17.675 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-07 13:28:17.676 [Task submitter] INFO  nextflow.Session - [36/7ea2d5] Submitted process > transcriptome_aligned_individual_fastqc (1)
+Apr-07 13:28:17.687 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-07 13:28:17.687 [Task submitter] INFO  nextflow.Session - [e4/7f40ab] Submitted process > transcriptome_unaligned_individual_fastqc (1)
+Apr-07 13:28:17.700 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.701 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.702 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.705 [main] DEBUG nextflow.Session - >>> barrier register (process: individual_alignment_stats)
+Apr-07 13:28:17.706 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > individual_alignment_stats -- maxForks: 208
+Apr-07 13:28:17.714 [Actor Thread 2] INFO  nextflow.processor.TaskProcessor - [skipping] Stored process > individual_alignment_stats (1)
+Apr-07 13:28:17.715 [Actor Thread 1] DEBUG nextflow.Session - <<< barrier arrive (process: individual_alignment_stats)
+Apr-07 13:28:17.732 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.732 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.732 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.733 [main] DEBUG nextflow.Session - >>> barrier register (process: combine_individual_alignment_stats)
+Apr-07 13:28:17.733 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > combine_individual_alignment_stats -- maxForks: 208
+Apr-07 13:28:17.739 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.739 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.739 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.740 [main] DEBUG nextflow.Session - >>> barrier register (process: sum_individual_alignment_stats)
+Apr-07 13:28:17.740 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > sum_individual_alignment_stats -- maxForks: 208
+Apr-07 13:28:17.743 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [skipping] Stored process > combine_individual_alignment_stats
+Apr-07 13:28:17.744 [Actor Thread 1] DEBUG nextflow.Session - <<< barrier arrive (process: combine_individual_alignment_stats)
+Apr-07 13:28:17.746 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.746 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.746 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.746 [Actor Thread 3] INFO  nextflow.processor.TaskProcessor - [skipping] Stored process > sum_individual_alignment_stats (1)
+Apr-07 13:28:17.746 [main] DEBUG nextflow.Session - >>> barrier register (process: combine_merged_alignment_stats)
+Apr-07 13:28:17.747 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > combine_merged_alignment_stats -- maxForks: 208
+Apr-07 13:28:17.747 [Actor Thread 1] DEBUG nextflow.Session - <<< barrier arrive (process: sum_individual_alignment_stats)
+Apr-07 13:28:17.751 [Actor Thread 3] INFO  nextflow.processor.TaskProcessor - [skipping] Stored process > combine_merged_alignment_stats
+Apr-07 13:28:17.752 [Actor Thread 1] DEBUG nextflow.Session - <<< barrier arrive (process: combine_merged_alignment_stats)
+Apr-07 13:28:17.758 [main] DEBUG nextflow.util.CacheHelper - Config settings `withName:create_ribo` matches process create_ribo
+Apr-07 13:28:17.758 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.758 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.758 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.759 [main] DEBUG nextflow.Session - >>> barrier register (process: create_ribo)
+Apr-07 13:28:17.759 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > create_ribo -- maxForks: 208
+Apr-07 13:28:17.764 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.764 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.764 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.765 [main] DEBUG nextflow.Session - >>> barrier register (process: publish_stats)
+Apr-07 13:28:17.765 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > publish_stats -- maxForks: 208
+Apr-07 13:28:17.768 [Actor Thread 3] DEBUG nextflow.processor.TaskProcessor - Process `create_ribo (1)` is unable to find [UnixPath]: `/home/xrx/my_project/project/workflow/snakescale/intermediates/GSE48140/ribo/experiments/GSM1169554.ribo` (pattern: `GSM1169554.ribo`)
+Apr-07 13:28:17.777 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.777 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.777 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.778 [main] DEBUG nextflow.Session - >>> barrier register (process: rnaseq_raw_fastqc)
+Apr-07 13:28:17.778 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > rnaseq_raw_fastqc -- maxForks: 208
+Apr-07 13:28:17.780 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-07 13:28:17.781 [Task submitter] INFO  nextflow.Session - [bc/368b74] Submitted process > publish_stats
+Apr-07 13:28:17.782 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.782 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.783 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.783 [main] DEBUG nextflow.Session - >>> barrier register (process: rnaseq_clip)
+Apr-07 13:28:17.783 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > rnaseq_clip -- maxForks: 208
+Apr-07 13:28:17.790 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-07 13:28:17.791 [Task submitter] INFO  nextflow.Session - [3b/b9b63c] Submitted process > rnaseq_raw_fastqc (1)
+Apr-07 13:28:17.794 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.794 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.795 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.795 [main] DEBUG nextflow.Session - >>> barrier register (process: rnaseq_filter)
+Apr-07 13:28:17.795 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > rnaseq_filter -- maxForks: 208
+Apr-07 13:28:17.807 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-07 13:28:17.807 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.807 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.807 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.807 [Task submitter] INFO  nextflow.Session - [75/0bf5de] Submitted process > rnaseq_clip (1)
+Apr-07 13:28:17.807 [main] DEBUG nextflow.Session - >>> barrier register (process: rnaseq_transcriptome_alignment)
+Apr-07 13:28:17.808 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > rnaseq_transcriptome_alignment -- maxForks: 208
+Apr-07 13:28:17.816 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.816 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.816 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.817 [main] DEBUG nextflow.Session - >>> barrier register (process: rnaseq_quality_filter)
+Apr-07 13:28:17.817 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > rnaseq_quality_filter -- maxForks: 208
+Apr-07 13:28:17.830 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.830 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-07 13:28:17.830 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.830 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.831 [main] DEBUG nextflow.Session - >>> barrier register (process: rnaseq_bam_to_bed)
+Apr-07 13:28:17.831 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > rnaseq_bam_to_bed -- maxForks: 208
+Apr-07 13:28:17.831 [Task submitter] INFO  nextflow.Session - [9a/b4bd3e] Submitted process > create_ribo (1)
+Apr-07 13:28:17.835 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.835 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.835 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.836 [main] DEBUG nextflow.Session - >>> barrier register (process: rnaseq_add_sample_index_col_to_bed)
+Apr-07 13:28:17.836 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > rnaseq_add_sample_index_col_to_bed -- maxForks: 208
+Apr-07 13:28:17.839 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.839 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.839 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.840 [main] DEBUG nextflow.Session - >>> barrier register (process: rnaseq_merge_bed)
+Apr-07 13:28:17.840 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > rnaseq_merge_bed -- maxForks: 208
+Apr-07 13:28:17.844 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.844 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.844 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.844 [main] DEBUG nextflow.Session - >>> barrier register (process: rnaseq_deduplicate)
+Apr-07 13:28:17.844 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > rnaseq_deduplicate -- maxForks: 208
+Apr-07 13:28:17.851 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.851 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.851 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.851 [main] DEBUG nextflow.Session - >>> barrier register (process: rnaseq_separate_bed_post_dedup)
+Apr-07 13:28:17.851 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > rnaseq_separate_bed_post_dedup -- maxForks: 208
+Apr-07 13:28:17.865 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.865 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.866 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.866 [main] DEBUG nextflow.Session - >>> barrier register (process: rnaseq_individual_alignment_stats)
+Apr-07 13:28:17.866 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > rnaseq_individual_alignment_stats -- maxForks: 208
+Apr-07 13:28:17.870 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.870 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.870 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.871 [main] DEBUG nextflow.Session - >>> barrier register (process: rnaseq_combine_individual_alignment_stats)
+Apr-07 13:28:17.871 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > rnaseq_combine_individual_alignment_stats -- maxForks: 208
+Apr-07 13:28:17.875 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.875 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.875 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.876 [main] DEBUG nextflow.Session - >>> barrier register (process: rnaseq_sum_individual_alignment_stats)
+Apr-07 13:28:17.876 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > rnaseq_sum_individual_alignment_stats -- maxForks: 208
+Apr-07 13:28:17.879 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.879 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.879 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.879 [main] DEBUG nextflow.Session - >>> barrier register (process: rnaseq_combine_merged_alignment_stats)
+Apr-07 13:28:17.880 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > rnaseq_combine_merged_alignment_stats -- maxForks: 208
+Apr-07 13:28:17.893 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.894 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.894 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.894 [main] DEBUG nextflow.Session - >>> barrier register (process: put_rnaseq_into_ribo)
+Apr-07 13:28:17.894 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > put_rnaseq_into_ribo -- maxForks: 208
+Apr-07 13:28:17.911 [main] DEBUG nextflow.processor.ProcessFactory - << taskConfig executor: local
+Apr-07 13:28:17.911 [main] DEBUG nextflow.processor.ProcessFactory - >> processorType: 'local'
+Apr-07 13:28:17.912 [main] DEBUG nextflow.executor.Executor - Initializing executor: local
+Apr-07 13:28:17.912 [main] DEBUG nextflow.Session - >>> barrier register (process: merge_ribos)
+Apr-07 13:28:17.912 [main] DEBUG nextflow.processor.TaskProcessor - Creating operator > merge_ribos -- maxForks: 208
+Apr-07 13:28:17.913 [main] DEBUG nextflow.script.ScriptRunner - > Await termination 
+Apr-07 13:28:17.913 [main] DEBUG nextflow.Session - Session await
+Apr-07 13:28:17.922 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: write_fastq_correspondence (1); status: COMPLETED; exit: 0; error: -; workDir: /home/xrx/my_project/project/workflow/snakescale/work/26/692aa16497ca1278cc577296409121]
+Apr-07 13:28:17.949 [Actor Thread 5] DEBUG nextflow.Session - <<< barrier arrive (process: write_fastq_correspondence)
+Apr-07 13:28:18.070 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 20; name: publish_stats; status: COMPLETED; exit: 0; error: -; workDir: /home/xrx/my_project/project/workflow/snakescale/work/bc/368b743e3dc3e3db7c99a9a0795a43]
+Apr-07 13:28:18.073 [Actor Thread 5] DEBUG nextflow.Session - <<< barrier arrive (process: publish_stats)
+Apr-07 13:28:19.225 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 9; name: transcriptome_aligned_individual_fastqc (1); status: COMPLETED; exit: 0; error: -; workDir: /home/xrx/my_project/project/workflow/snakescale/work/36/7ea2d53c27aedf5d345a1b5e99f4cd]
+Apr-07 13:28:19.230 [Actor Thread 5] DEBUG nextflow.Session - <<< barrier arrive (process: transcriptome_aligned_individual_fastqc)
+Apr-07 13:28:20.582 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 19; name: create_ribo (1); status: COMPLETED; exit: 0; error: -; workDir: /home/xrx/my_project/project/workflow/snakescale/work/9a/b4bd3ea36b6fc544538dad334f8b1f]
+Apr-07 13:28:20.585 [Task monitor] DEBUG nextflow.processor.TaskProcessor - Process `create_ribo (1)` is unable to find [UnixPath]: `/home/xrx/my_project/project/workflow/snakescale/intermediates/GSE48140/ribo/experiments/GSM1169554.ribo` (pattern: `GSM1169554.ribo`)
+Apr-07 13:28:20.598 [Task monitor] INFO  nextflow.processor.TaskProcessor - [9a/b4bd3e] NOTE: Missing output file(s) `GSM1169554.ribo` expected by process `create_ribo (1)` -- Execution is retried (1)
+Apr-07 13:28:20.607 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-07 13:28:20.608 [Task submitter] INFO  nextflow.Session - [59/c462cb] Re-submitted process > create_ribo (1)
+Apr-07 13:28:23.078 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 23; name: create_ribo (1); status: COMPLETED; exit: 0; error: -; workDir: /home/xrx/my_project/project/workflow/snakescale/work/59/c462cb81f3947802ddc4843a99f18b]
+Apr-07 13:28:23.079 [Task monitor] DEBUG nextflow.processor.TaskProcessor - Process `create_ribo (1)` is unable to find [UnixPath]: `/home/xrx/my_project/project/workflow/snakescale/intermediates/GSE48140/ribo/experiments/GSM1169554.ribo` (pattern: `GSM1169554.ribo`)
+Apr-07 13:28:23.129 [Task monitor] ERROR nextflow.processor.TaskProcessor - Error executing process > 'create_ribo (1)'
+
+Caused by:
+  Missing output file(s) `GSM1169554.ribo` expected by process `create_ribo (1)`
+
+Command executed:
+
+  ribopy create -n GSM1169554 	             --reference appris-v1 	             --lengths c_elegans_ref_transcript_lengths.tsv 							 --annotation c_elegans_ref_actual_regions.bed 							 --radius 50 							 -l 35 -r 10 							 --lengthmin 15 							 --lengthmax 40                --expmeta input.2                --ribometa GSE48140_modified.yaml 							  							 -n 8                --alignmentfile GSM1169554.merged.pre_dedup.bed                 GSM1169554.ribo
+
+Command exit status:
+  0
+
+Command output:
+  creating the ribo file GSM1169554.ribo...
+  Ribo file creation has failed!
+  Annotation error:
+  transcript:Y74C9A.6 : must have a positive length CDS
+  
+  Done.
+
+Command error:
+  + ribopy create -n GSM1169554 --reference appris-v1 --lengths c_elegans_ref_transcript_lengths.tsv --annotation c_elegans_ref_actual_regions.bed --radius 50 -l 35 -r 10 --lengthmin 15 --lengthmax 40 --expmeta input.2 --ribometa GSE48140_modified.yaml -n 8 --alignmentfile GSM1169554.merged.pre_dedup.bed GSM1169554.ribo
+
+Work dir:
+  /home/xrx/my_project/project/workflow/snakescale/work/59/c462cb81f3947802ddc4843a99f18b
+
+Tip: view the complete command output by changing to the process work dir and entering the command `cat .command.out`
+Apr-07 13:28:23.134 [Actor Thread 1] DEBUG nextflow.Session - <<< barrier arrive (process: create_ribo)
+Apr-07 13:28:23.136 [Task monitor] DEBUG nextflow.Session - Session aborted -- Cause: Missing output file(s) `GSM1169554.ribo` expected by process `create_ribo (1)`
+Apr-07 13:28:23.185 [Task monitor] DEBUG nextflow.Session - The following nodes are still active:
+[process] rnaseq_filter
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: -
+  port 2: (cntrl) -     ; channel: $
+
+[process] rnaseq_transcriptome_alignment
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: -
+  port 2: (cntrl) -     ; channel: $
+
+[process] rnaseq_quality_filter
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] rnaseq_bam_to_bed
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] rnaseq_add_sample_index_col_to_bed
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] rnaseq_merge_bed
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] rnaseq_deduplicate
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] rnaseq_separate_bed_post_dedup
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] rnaseq_individual_alignment_stats
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] rnaseq_combine_individual_alignment_stats
+  status=ACTIVE
+  port 0: (value) OPEN  ; channel: stat_table
+  port 1: (cntrl) -     ; channel: $
+
+[process] rnaseq_sum_individual_alignment_stats
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] rnaseq_combine_merged_alignment_stats
+  status=ACTIVE
+  port 0: (value) OPEN  ; channel: stat_files
+  port 1: (cntrl) -     ; channel: $
+
+[process] put_rnaseq_into_ribo
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] merge_ribos
+  status=ACTIVE
+  port 0: (value) OPEN  ; channel: sample_ribo
+  port 1: (value) OPEN  ; channel: ribo_count
+  port 2: (cntrl) -     ; channel: $
+
+Apr-07 13:28:23.192 [main] DEBUG nextflow.Session - Session await > all process finished
+Apr-07 13:28:23.193 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Apr-07 13:28:23.195 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: local)
+Apr-07 13:28:23.206 [main] WARN  n.processor.TaskPollingMonitor - Killing pending tasks (6)
+Apr-07 13:28:23.251 [main] DEBUG nextflow.trace.StatsObserver - Workflow completed > WorkflowStats[succeedCount=3; failedCount=8; ignoredCount=0; cachedCount=0; succeedDuration=1.4s; failedDuration=38.3s; cachedDuration=0ms]
+Apr-07 13:28:23.251 [main] DEBUG nextflow.trace.TraceFileObserver - Flow completing -- flushing trace file
+Apr-07 13:28:23.255 [main] DEBUG nextflow.trace.ReportObserver - Flow completing -- rendering html report
+Apr-07 13:28:23.355 [main] DEBUG nextflow.trace.ReportObserver - Execution report summary data:
+  {"rnaseq_raw_fastqc":{"cpu":null,"mem":null,"vmem":null,"time":null,"reads":null,"writes":null,"cpuUsage":null,"memUsage":null,"timeUsage":null},"transcriptome_aligned_individual_fastqc":{"cpu":{"mean":280.4,"min":280.4,"q1":280.4,"q2":280.4,"q3":280.4,"max":280.4,"minLabel":"transcriptome_aligned_individual_fastqc (1)","maxLabel":"transcriptome_aligned_individual_fastqc (1)","q1Label":"transcriptome_aligned_individual_fastqc (1)","q2Label":"transcriptome_aligned_individual_fastqc (1)","q3Label":"transcriptome_aligned_individual_fastqc (1)"},"mem":{"mean":28966912,"min":28966912,"q1":28966912,"q2":28966912,"q3":28966912,"max":28966912,"minLabel":"transcriptome_aligned_individual_fastqc (1)","maxLabel":"transcriptome_aligned_individual_fastqc (1)","q1Label":"transcriptome_aligned_individual_fastqc (1)","q2Label":"transcriptome_aligned_individual_fastqc (1)","q3Label":"transcriptome_aligned_individual_fastqc (1)"},"vmem":{"mean":3989680128,"min":3989680128,"q1":3989680128,"q2":3989680128,"q3":3989680128,"max":3989680128,"minLabel":"transcriptome_aligned_individual_fastqc (1)","maxLabel":"transcriptome_aligned_individual_fastqc (1)","q1Label":"transcriptome_aligned_individual_fastqc (1)","q2Label":"transcriptome_aligned_individual_fastqc (1)","q3Label":"transcriptome_aligned_individual_fastqc (1)"},"time":{"mean":1388,"min":1388,"q1":1388,"q2":1388,"q3":1388,"max":1388,"minLabel":"transcriptome_aligned_individual_fastqc (1)","maxLabel":"transcriptome_aligned_individual_fastqc (1)","q1Label":"transcriptome_aligned_individual_fastqc (1)","q2Label":"transcriptome_aligned_individual_fastqc (1)","q3Label":"transcriptome_aligned_individual_fastqc (1)"},"reads":{"mean":24100560,"min":24100560,"q1":24100560,"q2":24100560,"q3":24100560,"max":24100560,"minLabel":"transcriptome_aligned_individual_fastqc (1)","maxLabel":"transcriptome_aligned_individual_fastqc (1)","q1Label":"transcriptome_aligned_individual_fastqc (1)","q2Label":"transcriptome_aligned_individual_fastqc (1)","q3Label":"transcriptome_aligned_individual_fastqc (1)"},"writes":{"mean":234048,"min":234048,"q1":234048,"q2":234048,"q3":234048,"max":234048,"minLabel":"transcriptome_aligned_individual_fastqc (1)","maxLabel":"transcriptome_aligned_individual_fastqc (1)","q1Label":"transcriptome_aligned_individual_fastqc (1)","q2Label":"transcriptome_aligned_individual_fastqc (1)","q3Label":"transcriptome_aligned_individual_fastqc (1)"},"cpuUsage":{"mean":280.4,"min":280.4,"q1":280.4,"q2":280.4,"q3":280.4,"max":280.4,"minLabel":"transcriptome_aligned_individual_fastqc (1)","maxLabel":"transcriptome_aligned_individual_fastqc (1)","q1Label":"transcriptome_aligned_individual_fastqc (1)","q2Label":"transcriptome_aligned_individual_fastqc (1)","q3Label":"transcriptome_aligned_individual_fastqc (1)"},"memUsage":null,"timeUsage":null},"create_ribo":{"cpu":{"mean":177.05,"min":175.4,"q1":176.23,"q2":177.05,"q3":177.88,"max":178.7,"minLabel":"create_ribo (1)","maxLabel":"create_ribo (1)","q1Label":"create_ribo (1)","q2Label":"create_ribo (1)","q3Label":"create_ribo (1)"},"mem":{"mean":133353472,"min":120979456,"q1":127166464,"q2":133353472,"q3":139540480,"max":145727488,"minLabel":"create_ribo (1)","maxLabel":"create_ribo (1)","q1Label":"create_ribo (1)","q2Label":"create_ribo (1)","q3Label":"create_ribo (1)"},"vmem":{"mean":6792486912,"min":6792486912,"q1":6792486912,"q2":6792486912,"q3":6792486912,"max":6792486912,"minLabel":"create_ribo (1)","maxLabel":"create_ribo (1)","q1Label":"create_ribo (1)","q2Label":"create_ribo (1)","q3Label":"create_ribo (1)"},"time":{"mean":2393,"min":2317,"q1":2355,"q2":2393,"q3":2431,"max":2469,"minLabel":"create_ribo (1)","maxLabel":"create_ribo (1)","q1Label":"create_ribo (1)","q2Label":"create_ribo (1)","q3Label":"create_ribo (1)"},"reads":{"mean":27182218,"min":27182216,"q1":27182217,"q2":27182218,"q3":27182219,"max":27182220,"minLabel":"create_ribo (1)","maxLabel":"create_ribo (1)","q1Label":"create_ribo (1)","q2Label":"create_ribo (1)","q3Label":"create_ribo (1)"},"writes":{"mean":318609,"min":318609,"q1":318609,"q2":318609,"q3":318609,"max":318609,"minLabel":"create_ribo (1)","maxLabel":"create_ribo (1)","q1Label":"create_ribo (1)","q2Label":"create_ribo (1)","q3Label":"create_ribo (1)"},"cpuUsage":{"mean":22.13,"min":21.93,"q1":22.03,"q2":22.13,"q3":22.23,"max":22.34,"minLabel":"create_ribo (1)","maxLabel":"create_ribo (1)","q1Label":"create_ribo (1)","q2Label":"create_ribo (1)","q3Label":"create_ribo (1)"},"memUsage":null,"timeUsage":null},"write_fastq_correspondence":{"cpu":{"mean":120.4,"min":120.4,"q1":120.4,"q2":120.4,"q3":120.4,"max":120.4,"minLabel":"write_fastq_correspondence (1)","maxLabel":"write_fastq_correspondence (1)","q1Label":"write_fastq_correspondence (1)","q2Label":"write_fastq_correspondence (1)","q3Label":"write_fastq_correspondence (1)"},"mem":null,"vmem":null,"time":{"mean":16,"min":16,"q1":16,"q2":16,"q3":16,"max":16,"minLabel":"write_fastq_correspondence (1)","maxLabel":"write_fastq_correspondence (1)","q1Label":"write_fastq_correspondence (1)","q2Label":"write_fastq_correspondence (1)","q3Label":"write_fastq_correspondence (1)"},"reads":{"mean":89261,"min":89261,"q1":89261,"q2":89261,"q3":89261,"max":89261,"minLabel":"write_fastq_correspondence (1)","maxLabel":"write_fastq_correspondence (1)","q1Label":"write_fastq_correspondence (1)","q2Label":"write_fastq_correspondence (1)","q3Label":"write_fastq_correspondence (1)"},"writes":{"mean":321,"min":321,"q1":321,"q2":321,"q3":321,"max":321,"minLabel":"write_fastq_correspondence (1)","maxLabel":"write_fastq_correspondence (1)","q1Label":"write_fastq_correspondence (1)","q2Label":"write_fastq_correspondence (1)","q3Label":"write_fastq_correspondence (1)"},"cpuUsage":{"mean":120.4,"min":120.4,"q1":120.4,"q2":120.4,"q3":120.4,"max":120.4,"minLabel":"write_fastq_correspondence (1)","maxLabel":"write_fastq_correspondence (1)","q1Label":"write_fastq_correspondence (1)","q2Label":"write_fastq_correspondence (1)","q3Label":"write_fastq_correspondence (1)"},"memUsage":null,"timeUsage":null},"clipped_fastqc":{"cpu":null,"mem":null,"vmem":null,"time":null,"reads":null,"writes":null,"cpuUsage":null,"memUsage":null,"timeUsage":null},"rnaseq_clip":{"cpu":null,"mem":null,"vmem":null,"time":null,"reads":null,"writes":null,"cpuUsage":null,"memUsage":null,"timeUsage":null},"merge_transcriptome_alignment":{"cpu":null,"mem":null,"vmem":null,"time":null,"reads":null,"writes":null,"cpuUsage":null,"memUsage":null,"timeUsage":null},"transcriptome_unaligned_individual_fastqc":{"cpu":null,"mem":null,"vmem":null,"time":null,"reads":null,"writes":null,"cpuUsage":null,"memUsage":null,"timeUsage":null},"publish_stats":{"cpu":{"mean":110.1,"min":110.1,"q1":110.1,"q2":110.1,"q3":110.1,"max":110.1,"minLabel":"publish_stats","maxLabel":"publish_stats","q1Label":"publish_stats","q2Label":"publish_stats","q3Label":"publish_stats"},"mem":null,"vmem":null,"time":{"mean":21,"min":21,"q1":21,"q2":21,"q3":21,"max":21,"minLabel":"publish_stats","maxLabel":"publish_stats","q1Label":"publish_stats","q2Label":"publish_stats","q3Label":"publish_stats"},"reads":{"mean":95954,"min":95954,"q1":95954,"q2":95954,"q3":95954,"max":95954,"minLabel":"publish_stats","maxLabel":"publish_stats","q1Label":"publish_stats","q2Label":"publish_stats","q3Label":"publish_stats"},"writes":{"mean":1284,"min":1284,"q1":1284,"q2":1284,"q3":1284,"max":1284,"minLabel":"publish_stats","maxLabel":"publish_stats","q1Label":"publish_stats","q2Label":"publish_stats","q3Label":"publish_stats"},"cpuUsage":{"mean":110.1,"min":110.1,"q1":110.1,"q2":110.1,"q3":110.1,"max":110.1,"minLabel":"publish_stats","maxLabel":"publish_stats","q1Label":"publish_stats","q2Label":"publish_stats","q3Label":"publish_stats"},"memUsage":null,"timeUsage":null},"raw_fastqc":{"cpu":null,"mem":null,"vmem":null,"time":null,"reads":null,"writes":null,"cpuUsage":null,"memUsage":null,"timeUsage":null}}
+Apr-07 13:28:24.139 [main] DEBUG nextflow.trace.TimelineObserver - Flow completing -- rendering html timeline
+Apr-07 13:28:24.352 [main] DEBUG nextflow.CacheDB - Closing CacheDB done
+Apr-07 13:28:24.390 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye

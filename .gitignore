@@ -1,0 +1,100 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# Data files (keep structure via .gitkeep)
+# raw/ 为只读区：所有原始数据不入版本控制
+data/raw/**
+data/raw/fastq/*
+!data/raw/.gitkeep
+!data/raw/fastq/.gitkeep
+!data/raw/genome/.gitkeep
+# organized/ 为脚本生成的分类链接
+data/organized/**
+!data/organized/.gitkeep
+data/interim/**
+!data/interim/.gitkeep
+data/processed/**
+!data/processed/.gitkeep
+data/external/*
+!data/external/.gitkeep
+!data/external/metadata/
+data/external/metadata/*.csv
+
+# Logs (generated)
+logs/*
+!logs/.gitkeep
+*.log
+
+# Snakemake
+.snakemake/
+workflow/snakescale/.snakemake/
+workflow/snakescale/.nextflow.log
+workflow/snakescale/.nextflow/
+workflow/snakescale/nextflow_logs/
+workflow/snakescale/work/
+workflow/snakescale/output/
+workflow/snakescale/intermediates/
+
+# Reports / figures (generated)
+reports/figures/*
+!reports/figures/.gitkeep
+
+# Models (serialized)
+models/*
+!models/.gitkeep
+
+# Generated bioinformatics artifacts
+*.bam
+*.bed
+*.ribo
+*.trace
+*.html
+*.fastq.gz
+*.fq.gz
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Strict source-only release filter
+# 1. 忽略所有数据和中间产物目录
+data/raw/
+data/interim/
+data/processed/
+workflow/snakescale/reference/
+workflow/snakescale/nextflow_logs/
+workflow/snakescale/.snakemake/
+workflow/snakescale/output/
+reports/figures/
+
+# 2. 忽略所有大文件和数据后缀
+*.fastq
+*.fastq.gz
+*.bam
+*.bed
+*.ribo
+*.bt2
+*.fa
+*.fasta
+*.rda
+*.csv
+*.log
+*.pdf
+*.html
+*.txt

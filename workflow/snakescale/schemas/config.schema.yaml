@@ -1,0 +1,83 @@
+$schema: 'http://json-schema.org/draft-07/schema#'
+description: Schema for Snakescale x CCDS Config
+type: object
+properties:
+  ccds_raw_fastq:
+    type: string
+    default: "../../data/raw/fastq"
+    description: CCDS FASTQ input directory (relative to workflow/snakescale/)
+  ccds_interim:
+    type: string
+    default: "../../data/interim"
+    description: CCDS intermediate output directory
+  ccds_processed:
+    type: string
+    default: "../../data/processed"
+    description: CCDS final output directory
+  override:
+    type: boolean
+    default: false
+    description: Setting to Override Any Exceptions Thrown during Pre-Run Checks and Run RiboFlow
+  adapter_threshold:
+    type: integer
+    default: 50
+  riboflow_config:
+    type: string
+    description: Config Setting Used for RiboFlow
+  studies:
+    description: List of Studies to be Processed
+    type: array
+    items:
+      type: string
+  threads:
+    type: object
+    properties:
+      check_adapter:
+        default: 4
+        type: integer
+      check_adapter_stats:
+        default: 1
+        type: integer
+      check_lengths:
+        default: 1 
+        type: integer
+      run_riboflow:
+        type: integer
+  check_adapter:
+    type: object
+    properties:
+      skipped_reads:
+        default: 1000000
+        type: integer
+      sample_size:
+        default: 25000
+        type: integer
+  guess_adapter:
+    type: object
+    properties:
+      skipped_reads:
+        default: 1000000
+        type: integer
+      sample_size:
+        default: 10000
+        type: integer
+      min_length:
+        default: 10 
+        type: integer
+      max_length:
+        default: 15
+        type: integer
+      skipped_nucleotides:
+        default: 10
+        type: integer
+      seed_length:
+        default: 6
+        type: integer
+      match_ratio:
+        default: 0.5
+        type: number
+    
+required:
+  - studies
+  - riboflow_config
+  - threads

@@ -1,0 +1,94 @@
+# ============================================================================
+# config.yaml — Snakescale × CCDS 整合配置
+#
+# 融合 RiboBase/snakescale 原版配置参数 + CCDS 目录路径 + SLURM 集群资源
+#
+# ★ 路径说明: 所有 ccds_* 路径相对于 workflow/snakescale/ (Snakefile 所在目录)
+# ============================================================================
+
+# ── CCDS 目录路径覆写 ─────────────────────────────────────────────────────
+# Snakefile 通过这些键读取 CCDS 标准目录，确保 I/O 路径闭环
+ccds_raw_fastq: "../../data/raw/fastq"       # FASTQ 输入 (已由 sradownloader 下载)
+ccds_interim:   "../../data/interim"          # 中间产物 (adapter_check, project yaml, logs)
+ccds_processed: "../../data/processed"        # 最终输出 (.ribo 文件, riboflow_status)
+
+# ── CSV 元数据路径 ────────────────────────────────────────────────────────
+# 替代原 SQLite db.sqlite3，直接从本地 CSV 读取 study/experiment 元数据
+mapping_csv:  "../../data/external/test_srx_to_srr_mapping.csv"   # 测试专用 (4物种×1对)
+metadata_csv: "../../data/external/test_metadata.csv"                  # 测试专用
+
+# ── Study 列表 ─────────────────────────────────────────────────────────────
+# 格式: GSE<accession> 或 GSE<accession>_dedup (启用去重)
+# generate_yaml.py 从上述 CSV 查询元数据并自动生成 per-study YAML
+studies:
+  # Caenorhabditis elegans (1 pair: SRR914339 Ribo + SRR914333 RNA)
+  - GSE48140
+  # Arabidopsis thaliana (1 pair: SRR966477 Ribo + SRR966478 RNA)
+  - GSE50597
+  # Homo sapiens (1 pair: SRR953773 Ribo + SRR953772 RNA)
+  - GSE49994
+  # Saccharomyces cerevisiae (1 pair: SRR8439615 Ribo + SRR8439643 RNA)
+  - GSE125038
+
+# ── Pre-Run Check 覆盖 ────────────────────────────────────────────────────
+# 如果设为 True, 即使 pre-run checks 失败也强制运行 RiboFlow
+override: True
+
+# ── RiboFlow Nextflow 配置 ────────────────────────────────────────────────
+# 对应 riboflow/configs/ 中的 profile 名称
+riboflow_config: stampede_local
+
+# ── Adapter 检测阈值 ──────────────────────────────────────────────────────
+# 若 adapter 比例低于此百分比，则判定为 low adapter presence
+adapter_threshold: 50
+
+# ── 线程配置 ──────────────────────────────────────────────────────────────
+threads:
+  check_adapter: 4
+  check_adapter_stats: 1
+  check_lengths: 1
+  run_riboflow: 48
+
+# ── Adapter 检测采样参数 ──────────────────────────────────────────────────
+check_adapter:
+  skipped_reads: 1000000    # 跳过前 N reads 后开始采样
+  sample_size: 25000        # 采样 reads 数量
+
+# ── Adapter 猜测参数 ─────────────────────────────────────────────────────
+guess_adapter:
+  skipped_reads: 1000000
+  sample_size: 10000
+  min_length: 10            # 最短有效 adapter 猜测长度
+  max_length: 15            # 停止延伸的长度上限
+  skipped_nucleotides: 10   # 读长中跳过的 5' 端核苷酸数
+  seed_length: 6            # 初始种子长度
+  match_ratio: 0.5          # 延伸需达到的单碱基出现比例
+
+# ── SLURM 集群资源配置 ────────────────────────────────────────────────────
+# 此段供 Makefile 中 --cluster sbatch 使用，与 Makefile 保持一致
+slurm:
+  partition: "compute"
+  max_jobs: 50
+  latency_wait: 30
+  account: ""
+  qos: ""
+
+# ── 默认资源限制 (Snakemake --default-resources) ─────────────────────────
+# 当 rule 未显式声明 resources 时，使用以下默认值
+default_resources:
+  threads: 4             # 每个 rule 默认线程数
+  mem_mb: 8000           # 每个 rule 默认内存 (MB)
+  runtime_min: 120       # 每个 rule 默认最大运行时间 (分钟)
+  disk_mb: 50000         # 每个 rule 默认磁盘限额 (MB)
+
+# ── Per-Rule 资源覆盖 ────────────────────────────────────────────────────
+resources:
+  check_adapter:
+    mem_mb: 4000
+    runtime_min: 30
+  check_lengths:
+    mem_mb: 4000
+    runtime_min: 30
+  run_riboflow:
+    mem_mb: 32000
+    runtime_min: 480

@@ -1,0 +1,42 @@
+# Conda environment for Silk Protein TE Analysis Platform
+# Usage: mamba env create -f environment.yaml
+# Activate: conda activate te_analysis
+
+name: te_analysis
+
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  # ── Python core ──
+  - python>=3.10
+  - pip
+
+  # ── Python packages ──
+  - pandas>=2.0
+  - numpy>=1.24
+  - snakemake>=7.0
+
+  # ── Bioinformatics CLI tools ──
+  - cutadapt>=4.0
+  - bowtie2>=2.5
+  - star>=2.7
+  - samtools>=1.17
+  - bedtools>=2.31
+  - nextflow>=22.10,<23.0    # DSL1 compatibility for RiboFlow
+  - fastqc>=0.12
+  - hisat2>=2.2
+
+  # ── R and R packages ──
+  - r-base>=4.2
+  - r-tidyverse
+  - r-foreach
+  - r-doparallel
+  - r-compositions
+
+  # ── pip-only packages ──
+  - pip:
+      - bioinfokit
+      - ribopy
