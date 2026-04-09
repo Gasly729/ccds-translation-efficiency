@@ -15,6 +15,13 @@
 # 伪计数处理: propr 内部对零值执行乘性简单替换 (multiplicative simple
 # replacement)，无需外部手动添加伪计数。
 #
+# 依赖 R 包 (建议在 snakemake-ribo conda 环境中运行):
+#   propr, compositions, tidyverse, foreach, doParallel
+#
+# 推荐运行方式:
+#   export RSCRIPT_BIN=/path/to/conda/envs/snakemake-ribo/bin/Rscript
+#   $RSCRIPT_BIN TE.R /path/to/work_dir
+#
 # 用法:
 #   Rscript TE.R /path/to/work_dir
 #
@@ -31,7 +38,11 @@ library(compositions)
 library(tidyverse)
 library(foreach)
 library(doParallel)
-cl <- makeCluster(1)
+# 并行核数: 上限 64，避免超过 R 的默认 socket 连接数限制（128）。
+# 实际值 = min(64, detectCores() - 2)，在 208 核服务器上为 64 核。
+# 不可设为 >64，否则 makeCluster() 会报 'all connections are in use' 错误。
+n_cores <- min(64L, max(1L, parallel::detectCores() - 2L))
+cl <- makeCluster(n_cores)
 registerDoParallel(cl)
 
 args <- commandArgs(trailingOnly = TRUE)

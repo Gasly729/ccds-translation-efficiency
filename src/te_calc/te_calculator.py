@@ -73,6 +73,47 @@ def extract_gene_name(transcript_id: str) -> str:
     return transcript_id
 
 
+def detect_species_from_ribo(ribo_path: str) -> str:
+    """
+    通过 .ribo 文件内转录本 ID 格式自动识别物种。
+
+    判断规则 (按优先级):
+      ENST...              → human        (Ensembl human transcript ID)
+      ENSMUS...            → mouse        (Ensembl mouse transcript ID)
+      AT[0-9]G...          → arabidopsis  (TAIR gene ID, e.g. AT1G01010)
+      rna-NM_ / rna-Y...   → yeast        (NCBI RefSeq RNA ID for S. cerevisiae)
+      transcript:Y...      → celegans     (WormBase transcript ID)
+      | 分隔符 ≥5字段       → human/mouse  (APPRIS pipe format fallback)
+      其他                  → unknown
+    """
+    if not HAS_RIBOPY:
+        raise ImportError("ribopy 未安装")
+    ribo = Ribo(ribo_path)
+    names = ribo.transcript_names
+    if len(names) == 0:
+        return "unknown"
+    first = str(names[0])
+    if first.startswith("ENST"):
+        return "human"
+    if first.startswith("ENSMUS"):
+        return "mouse"
+    if len(first) >= 3 and first[:2] == "AT" and first[2].isdigit():
+        return "arabidopsis"
+    if first.startswith("rna-"):
+        return "yeast"
+    if first.startswith("transcript:"):
+        return "celegans"
+    if first.count("|") >= 4:
+        # APPRIS pipe format — 第5字段区分 human/mouse
+        parts = first.split("|")
+        gene_name = parts[4] if len(parts) > 4 else ""
+        # 小鼠基因名惯例: 首字母大写其余小写
+        if gene_name and gene_name[0].isupper() and gene_name[1:].islower():
+            return "mouse"
+        return "human"
+    return "unknown"
+
+
 def extract_counts_from_ribo(ribo_path: str) -> tuple:
     """从单个 .ribo 文件提取 Ribo-seq 和 RNA-seq 的 CDS 计数."""
     sample_name = os.path.basename(ribo_path).replace(".ribo", "")
@@ -105,14 +146,21 @@ def extract_counts_from_ribo(ribo_path: str) -> tuple:
 
 
 def stage0_extract(ribo_dir: str, output_dir: str,
-                   extract_gene_name_flag: bool = True) -> tuple:
+                   extract_gene_name_flag: bool = True) -> dict:
     """
-    Stage 0: 遍历 ribo_dir 下所有 .ribo 文件，提取 CDS 计数矩阵。
+    Stage 0: 遍历 ribo_dir 下所有 .ribo 文件，按物种分组提取 CDS 计数矩阵。
 
-    输出:
-      - {output_dir}/ribo_raw.csv
-      - {output_dir}/rnaseq_raw.csv
-      - {output_dir}/infor_filter.csv
+    核心修复: 不同物种的 .ribo 文件使用不同参考转录组，直接 concat 会产生
+    大量结构性零值，导致非人类样本 CPM 过滤后全部进入 dummy_gene，TE ≈ 0。
+    修复策略: 按物种分组，各组内部 concat，输出独立的 count 文件。
+
+    输出 (每个物种一套):
+      - {output_dir}/ribo_raw_{species}.csv
+      - {output_dir}/rnaseq_raw_{species}.csv
+      - {output_dir}/infor_filter_{species}.csv
+
+    返回:
+      dict: { species_name: {"ribo": df_ribo, "rna": df_rna, "samples": [...]} }
     """
     import re
 
@@ -127,61 +175,89 @@ def stage0_extract(ribo_dir: str, output_dir: str,
         raise FileNotFoundError(f"在 {ribo_dir} 中未找到 .ribo 文件")
     print(f"[Stage 0] 找到 {len(ribo_files)} 个 .ribo 文件")
 
-    ribo_counts_list = []
-    rna_counts_list = []
-    sample_names = []
-
+    # ── Step 1: 按物种分组 ────────────────────────────────────────────────
+    species_groups: dict[str, list] = {}   # species → [ribo_path, ...]
     for ribo_path in ribo_files:
-        sname = os.path.basename(ribo_path).replace(".ribo", "")
-        print(f"  处理: {sname}")
-        try:
-            sname, ribo_s, rna_s, has_rna = extract_counts_from_ribo(ribo_path)
-            ribo_counts_list.append(ribo_s)
-            if has_rna and rna_s is not None:
-                rna_counts_list.append(rna_s)
-            sample_names.append(sname)
-        except Exception as e:
-            print(f"  [错误] {sname}: {e}")
+        sp = detect_species_from_ribo(ribo_path)
+        species_groups.setdefault(sp, []).append(ribo_path)
+
+    print(f"[Stage 0] 物种分组结果:")
+    for sp, paths in sorted(species_groups.items()):
+        print(f"  {sp}: {len(paths)} 个文件 → "
+              f"{[os.path.basename(p) for p in paths]}")
+
+    # ── Step 2: 逐物种提取并保存 ─────────────────────────────────────────
+    species_data: dict[str, dict] = {}
+
+    for sp, paths in sorted(species_groups.items()):
+        print(f"\n[Stage 0] 提取物种: {sp} ({len(paths)} 个文件)")
+        ribo_counts_list = []
+        rna_counts_list = []
+        sample_names = []
+
+        for ribo_path in paths:
+            sname = os.path.basename(ribo_path).replace(".ribo", "")
+            print(f"  处理: {sname}")
+            try:
+                sname, ribo_s, rna_s, has_rna = extract_counts_from_ribo(ribo_path)
+                ribo_counts_list.append(ribo_s)
+                if has_rna and rna_s is not None:
+                    rna_counts_list.append(rna_s)
+                sample_names.append(sname)
+            except Exception as e:
+                print(f"  [错误] {sname}: {e}")
+                continue
+
+        if not ribo_counts_list:
+            print(f"  [跳过] {sp}: 没有成功提取任何数据")
             continue
 
-    if not ribo_counts_list:
-        raise RuntimeError("没有成功提取任何数据")
-
-    df_ribo = pd.concat(ribo_counts_list, axis=1).fillna(0).astype(int)
-    if extract_gene_name_flag:
-        df_ribo.index = df_ribo.index.map(extract_gene_name)
-        df_ribo = df_ribo.groupby(df_ribo.index).mean().astype(int)
-    df_ribo.index.name = ""
-
-    df_rna = None
-    if rna_counts_list:
-        df_rna = pd.concat(rna_counts_list, axis=1).fillna(0)
+        # 同物种内 concat — 行索引相同，不产生跨物种零值
+        df_ribo = pd.concat(ribo_counts_list, axis=1).fillna(0).astype(int)
         if extract_gene_name_flag:
-            df_rna.index = df_rna.index.map(extract_gene_name)
-            df_rna = df_rna.groupby(df_rna.index).mean()
-        df_rna.index.name = ""
+            df_ribo.index = df_ribo.index.map(extract_gene_name)
+            df_ribo = df_ribo.groupby(df_ribo.index).mean().astype(int)
+        df_ribo.index.name = ""
 
-    # 保存
-    ribo_out = os.path.join(output_dir, "ribo_raw.csv")
-    df_ribo.to_csv(ribo_out)
-    print(f"  [OK] {ribo_out} ({df_ribo.shape[0]} genes × {df_ribo.shape[1]} samples)")
+        df_rna = None
+        if rna_counts_list:
+            df_rna = pd.concat(rna_counts_list, axis=1).fillna(0)
+            if extract_gene_name_flag:
+                df_rna.index = df_rna.index.map(extract_gene_name)
+                df_rna = df_rna.groupby(df_rna.index).mean()
+            df_rna.index.name = ""
 
-    if df_rna is not None:
-        rna_out = os.path.join(output_dir, "rnaseq_raw.csv")
-        df_rna.to_csv(rna_out)
-        print(f"  [OK] {rna_out} ({df_rna.shape[0]} genes × {df_rna.shape[1]} samples)")
+        # 保存物种专属文件
+        ribo_out = os.path.join(output_dir, f"ribo_raw_{sp}.csv")
+        df_ribo.to_csv(ribo_out)
+        print(f"  [OK] {ribo_out} "
+              f"({df_ribo.shape[0]} genes × {df_ribo.shape[1]} samples)")
 
-    # infor_filter.csv
-    info_list = []
-    for i, s in enumerate(sample_names, 1):
-        cell_line = re.sub(r'_rep\d+$', '', s)
-        info_list.append({"": i, "experiment_alias": s, "cell_line": cell_line})
-    df_info = pd.DataFrame(info_list)
-    info_out = os.path.join(output_dir, "infor_filter.csv")
-    df_info.to_csv(info_out, index=False)
-    print(f"  [OK] {info_out}")
+        if df_rna is not None:
+            rna_out = os.path.join(output_dir, f"rnaseq_raw_{sp}.csv")
+            df_rna.to_csv(rna_out)
+            print(f"  [OK] {rna_out} "
+                  f"({df_rna.shape[0]} genes × {df_rna.shape[1]} samples)")
 
-    return df_ribo, df_rna
+        # infor_filter_{species}.csv
+        info_list = []
+        for i, s in enumerate(sample_names, 1):
+            cell_line = re.sub(r'_rep\d+$', '', s)
+            info_list.append({"": i, "experiment_alias": s, "cell_line": cell_line})
+        info_out = os.path.join(output_dir, f"infor_filter_{sp}.csv")
+        pd.DataFrame(info_list).to_csv(info_out, index=False)
+        print(f"  [OK] {info_out}")
+
+        species_data[sp] = {
+            "ribo": df_ribo,
+            "rna": df_rna,
+            "samples": sample_names,
+        }
+
+    if not species_data:
+        raise RuntimeError("没有成功提取任何物种的数据")
+
+    return species_data
 
 
 # =============================================================================
@@ -593,16 +669,21 @@ def stage1_preprocess(output_dir: str,
                       cpm_cutoff: int = DEFAULT_CPM_CUTOFF,
                       overall_cutoff: int = DEFAULT_OVERALL_CUTOFF,
                       nonpolya_csv: str = None,
-                      pairing: dict = None) -> None:
+                      pairing: dict = None,
+                      species: str = "") -> None:
     """
     Stage 1: paired 模式预处理。
     100% 复刻 CenikLab ribobase_counts_processing.py 的 'paired' 分支
     (lines 105-135)
 
-    如果 pairing 不为 None，则在预处理前执行强约束配对对齐。
+    species: 物种标识符 (如 'human', 'mouse', 'arabidopsis', 'yeast')。
+             不为空时读写 ribo_raw_{species}.csv 格式文件，
+             输出 ribo_paired_count_dummy_{species}.csv 等。
+             为空时保持旧行为 (兼容单物种模式)。
     """
-    ribo_raw_path = os.path.join(output_dir, "ribo_raw.csv")
-    rna_raw_path = os.path.join(output_dir, "rnaseq_raw.csv")
+    suffix = f"_{species}" if species else ""
+    ribo_raw_path = os.path.join(output_dir, f"ribo_raw{suffix}.csv")
+    rna_raw_path = os.path.join(output_dir, f"rnaseq_raw{suffix}.csv")
 
     if not os.path.exists(ribo_raw_path):
         raise FileNotFoundError(f"未找到 {ribo_raw_path}")
@@ -627,7 +708,7 @@ def stage1_preprocess(output_dir: str,
         print(f"[Stage 0.5] 已覆写对齐后的 count 矩阵 "
               f"({len(df_ribo_aligned.columns)} 对配对样本)")
 
-        # 覆写 infor_filter.csv
+        # 覆写 infor_filter_{species}.csv
         info_list = []
         for i, info in enumerate(aligned_info, 1):
             info_list.append({
@@ -636,7 +717,7 @@ def stage1_preprocess(output_dir: str,
                 "cell_line": info["cell_line"],
             })
         pd.DataFrame(info_list).to_csv(
-            os.path.join(output_dir, "infor_filter.csv"), index=False)
+            os.path.join(output_dir, f"infor_filter{suffix}.csv"), index=False)
     else:
         # ── 无 pairing 字典时的安全检查 ─────────────────────────────────
         df_ribo_check = pd.read_csv(ribo_raw_path, index_col=0, nrows=0)
@@ -722,19 +803,19 @@ def stage1_preprocess(output_dir: str,
 
     # ── Step 1e: save ────────────────────────────────────────────────────
     print("[Stage 1] 保存预处理结果...")
-    ribo_count_dummy.to_csv(os.path.join(output_dir, "ribo_paired_count_dummy.csv"))
+    ribo_count_dummy.to_csv(os.path.join(output_dir, f"ribo_paired_count_dummy{suffix}.csv"))
     ribo_CPM.to_csv(os.path.join(
-        output_dir, f"ribo_paired_cpm_dummy_{overall_cutoff}.csv"))
+        output_dir, f"ribo_paired_cpm_dummy{suffix}_{overall_cutoff}.csv"))
     ribo_Q.to_csv(os.path.join(
-        output_dir, f"ribo_paired_quantile_dummy_{overall_cutoff}.csv"))
-    rna_count_dummy.to_csv(os.path.join(output_dir, "rna_paired_count_dummy.csv"))
+        output_dir, f"ribo_paired_quantile_dummy{suffix}_{overall_cutoff}.csv"))
+    rna_count_dummy.to_csv(os.path.join(output_dir, f"rna_paired_count_dummy{suffix}.csv"))
     rna_CPM.to_csv(os.path.join(
-        output_dir, f"rna_paired_cpm_dummy_{overall_cutoff}.csv"))
+        output_dir, f"rna_paired_cpm_dummy{suffix}_{overall_cutoff}.csv"))
     rna_Q.to_csv(os.path.join(
-        output_dir, f"rna_paired_quantile_dummy_{overall_cutoff}.csv"))
+        output_dir, f"rna_paired_quantile_dummy{suffix}_{overall_cutoff}.csv"))
 
-    print(f"  [OK] ribo_paired_count_dummy.csv  ({ribo_count_dummy.shape[0]} genes)")
-    print(f"  [OK] rna_paired_count_dummy.csv   ({rna_count_dummy.shape[0]} genes)")
+    print(f"  [OK] ribo_paired_count_dummy{suffix}.csv  ({ribo_count_dummy.shape[0]} genes)")
+    print(f"  [OK] rna_paired_count_dummy{suffix}.csv   ({rna_count_dummy.shape[0]} genes)")
 
 
 # =============================================================================
@@ -754,28 +835,51 @@ def stage1_preprocess(output_dir: str,
 # └─────────────────────────────────────────────────────────────────────────┘
 # =============================================================================
 
-def stage2_run_te_r(output_dir: str) -> bool:
+def stage2_run_te_r(output_dir: str, species: str = "") -> bool:
     """
     Stage 2: 调用 TE.R 执行 CLR/ILR 成分回归。
-    R 脚本读取 {output_dir}/ribo_paired_count_dummy.csv 和
-    rna_paired_count_dummy.csv，输出 human_TE_sample_level.rda
+    species 不为空时，在临时子目录中运行，读写带物种后缀的文件。
     """
+    import tempfile
     te_r = str(TE_R_PATH)
     if not os.path.exists(te_r):
         print(f"[Stage 2] 错误: 未找到 {te_r}")
         return False
 
-    dummy_ribo = os.path.join(output_dir, "ribo_paired_count_dummy.csv")
-    dummy_rna = os.path.join(output_dir, "rna_paired_count_dummy.csv")
+    suffix = f"_{species}" if species else ""
+    dummy_ribo = os.path.join(output_dir, f"ribo_paired_count_dummy{suffix}.csv")
+    dummy_rna = os.path.join(output_dir, f"rna_paired_count_dummy{suffix}.csv")
     if not os.path.exists(dummy_ribo) or not os.path.exists(dummy_rna):
-        print("[Stage 2] 错误: 缺少 Stage 1 输出的 count_dummy 文件")
+        print(f"[Stage 2] 错误: 缺少 Stage 1 输出的 count_dummy 文件 ({suffix})")
         return False
 
-    print(f"[Stage 2] 调用 TE.R (CLR/ILR 成分回归)...")
-    print(f"  R 脚本: {te_r}")
-    print(f"  工作目录: {output_dir}")
+    # TE.R 固定读取工作目录下的 ribo_paired_count_dummy.csv
+    # 用临时子目录做符号链接，保持 TE.R 原始代码不变
+    work_dir = os.path.join(output_dir, f"_te_workdir{suffix}")
+    os.makedirs(work_dir, exist_ok=True)
+    for src, dst in [
+        (dummy_ribo, os.path.join(work_dir, "ribo_paired_count_dummy.csv")),
+        (dummy_rna,  os.path.join(work_dir, "rna_paired_count_dummy.csv")),
+    ]:
+        if os.path.exists(dst) or os.path.islink(dst):
+            os.remove(dst)
+        os.symlink(os.path.abspath(src), dst)
 
-    cmd = ["Rscript", te_r, os.path.abspath(output_dir)]
+    infor_src = os.path.join(output_dir, f"infor_filter{suffix}.csv")
+    infor_dst = os.path.join(work_dir, "infor_filter.csv")
+    if os.path.exists(infor_src):
+        if os.path.exists(infor_dst) or os.path.islink(infor_dst):
+            os.remove(infor_dst)
+        os.symlink(os.path.abspath(infor_src), infor_dst)
+
+    print(f"[Stage 2] 调用 TE.R (CLR/ILR 成分回归){' — '+species if species else ''}...")
+    print(f"  R 脚本: {te_r}")
+    print(f"  工作目录: {work_dir}")
+
+    # 优先使用 RSCRIPT_BIN 环境变量，以便在非默认 conda 环境中调用 R
+    # 例如: export RSCRIPT_BIN=/home/xrx/miniconda3/envs/snakemake-ribo/bin/Rscript
+    rscript_bin = os.environ.get("RSCRIPT_BIN", "Rscript")
+    cmd = [rscript_bin, te_r, os.path.abspath(work_dir)]
     try:
         result = subprocess.run(
             cmd, capture_output=True, text=True, timeout=7200,
@@ -789,6 +893,12 @@ def stage2_run_te_r(output_dir: str) -> bool:
                 for line in result.stderr.strip().split("\n"):
                     print(f"  [R stderr] {line}")
             return False
+        # 把 .rda 结果复制回 output_dir（带物种后缀）
+        rda_src = os.path.join(work_dir, "human_TE_sample_level.rda")
+        rda_dst = os.path.join(output_dir, f"human_TE_sample_level{suffix}.rda")
+        if os.path.exists(rda_src):
+            shutil.copy2(rda_src, rda_dst)
+            print(f"  [OK] {rda_dst}")
         print("[Stage 2] TE.R 执行成功")
         return True
     except FileNotFoundError:
@@ -803,38 +913,40 @@ def stage2_run_te_r(output_dir: str) -> bool:
 # Stage 3: 后处理 — .rda → CSV, 按条件分组, 最终汇总
 # =============================================================================
 
-def stage3_postprocess(output_dir: str, info_csv: str = None) -> str:
+def stage3_postprocess(output_dir: str, info_csv: str = None,
+                       species: str = "") -> str:
     """
-    Stage 3: 后处理 TE 结果。
-    - 从 .rda 提取为 CSV
-    - 按 cell_line 分组取均值 (复刻 TE.R:59-67)
-    - 转置输出 (复刻 transpose_TE.py)
-    - 生成 te_results_final.csv
+    Stage 3: 后处理单物种 TE 结果。
+    - .rda → CSV
+    - 按 cell_line/study 分组取均值
+    - 返回该物种的 te_{species}.csv 路径（用于后续跨物种合并）
 
-    返回最终结果文件路径。
+    species 不为空时，读写带物种后缀的文件。
     """
-    rda_file = os.path.join(output_dir, "human_TE_sample_level.rda")
-    final_out = os.path.join(output_dir, "te_results_final.csv")
+    suffix = f"_{species}" if species else ""
+    rda_file = os.path.join(output_dir, f"human_TE_sample_level{suffix}.rda")
+    species_out = os.path.join(output_dir, f"te_{species if species else 'result'}.csv")
 
     if not os.path.exists(rda_file):
-        print("[Stage 3] 警告: 未找到 human_TE_sample_level.rda")
-        # 尝试直接读取已有的 CSV
-        cellline_csv = os.path.join(output_dir, "human_TE_cellline_all.csv")
+        print(f"[Stage 3] 警告: 未找到 {rda_file}")
+        cellline_csv = os.path.join(output_dir, f"human_TE_cellline_all{suffix}.csv")
         if os.path.exists(cellline_csv):
-            shutil.copy(cellline_csv, final_out)
-            return final_out
+            shutil.copy(cellline_csv, species_out)
+            return species_out
         return None
 
     # 3a: .rda → sample-level CSV
-    print("[Stage 3] 转换 .rda → CSV...")
-    sample_csv = os.path.join(output_dir, "TE_sample_level.csv")
+    print(f"[Stage 3] 转换 .rda → CSV ({species or 'default'})...")
+    sample_csv = os.path.join(output_dir, f"TE_sample_level{suffix}.csv")
     r_cmd = (
         f'load("{rda_file}"); '
         f'write.csv(t(human_TE), "{sample_csv}")'
     )
     try:
+        # 与 stage2 保持一致，使用同一 R 环境（RSCRIPT_BIN 环境变量）
+        rscript_bin = os.environ.get("RSCRIPT_BIN", "Rscript")
         subprocess.run(
-            ["Rscript", "-e", r_cmd],
+            [rscript_bin, "-e", r_cmd],
             capture_output=True, check=True, timeout=300,
         )
         print(f"  [OK] {sample_csv}")
@@ -842,37 +954,73 @@ def stage3_postprocess(output_dir: str, info_csv: str = None) -> str:
         print(f"[Stage 3] 警告: .rda 转换失败: {e}")
         return None
 
-    # 3b: 按 cell_line 分组 (复刻 TE.R:59-67)
-    if info_csv and os.path.exists(info_csv):
-        print("[Stage 3] 按 cell_line 分组取均值...")
+    # 3b: 按 cell_line/study 分组 (复刻 TE.R:59-67)
+    _info_csv = info_csv or os.path.join(output_dir, f"infor_filter{suffix}.csv")
+    if _info_csv and os.path.exists(_info_csv):
+        print(f"[Stage 3] 按 cell_line 分组取均值 ({species or 'default'})...")
         te_sample = pd.read_csv(sample_csv, index_col=0)
-        infor = pd.read_csv(info_csv)
+        infor = pd.read_csv(_info_csv)
         te_sample_t = te_sample.T if te_sample.shape[0] < te_sample.shape[1] else te_sample
 
         if "experiment_alias" in infor.columns and "cell_line" in infor.columns:
             mapping = dict(zip(infor["experiment_alias"], infor["cell_line"]))
-            te_sample_t.index = te_sample_t.index.map(
-                lambda x: mapping.get(x, x))
+            te_sample_t.index = te_sample_t.index.map(lambda x: mapping.get(x, x))
             te_by_cellline = te_sample_t.groupby(te_sample_t.index).mean()
-            cellline_csv = os.path.join(output_dir, "human_TE_cellline_all.csv")
+            cellline_csv = os.path.join(output_dir, f"human_TE_cellline_all{suffix}.csv")
             te_by_cellline.to_csv(cellline_csv)
             print(f"  [OK] {cellline_csv}")
+            # 转置为 samples × genes 格式
+            transposed = te_by_cellline.T
+            transposed.index = transposed.index.str.replace(r"\.(.*)", "", regex=True)
+            transposed.to_csv(species_out)
+            print(f"  [OK] {species_out}")
+            return species_out
 
-    # 3c: 转置最终输出 (复刻 transpose_TE.py:9-12)
-    print("[Stage 3] 生成最终结果...")
-    if os.path.exists(os.path.join(output_dir, "human_TE_cellline_all.csv")):
-        df_final = pd.read_csv(
-            os.path.join(output_dir, "human_TE_cellline_all.csv"), index_col=0)
-        transposed = df_final.T
-        transposed.index = transposed.index.str.replace(r"\.(.*)", "", regex=True)
-        transposed.to_csv(final_out)
-    elif os.path.exists(sample_csv):
-        # 无分组信息时直接输出 sample-level
-        shutil.copy(sample_csv, final_out)
-    else:
+    # 无分组信息时直接输出 sample-level
+    te_sample = pd.read_csv(sample_csv, index_col=0)
+    te_sample_t = te_sample.T if te_sample.shape[0] < te_sample.shape[1] else te_sample
+    te_sample_t.index = te_sample_t.index.str.replace(r"\.(.*)", "", regex=True)
+    te_sample_t.to_csv(species_out)
+    print(f"  [OK] {species_out}")
+    return species_out
+
+
+def merge_cross_species_te(species_te_files: dict, output_dir: str,
+                           annotation_csv: str = None) -> str:
+    """
+    跨物种 TE 合并：将各物种的 te_{species}.csv 合并为 te_results_final.csv。
+
+    策略:
+      - 每个物种的 TE 矩阵行是样本(study)，列是该物种的基因
+      - 合并时使用 outer join (pd.concat axis=0 join='outer')：
+        跨物种缺失的基因位置填 NaN，不填 0。
+        填 0 会引入虚假的低 TE 信号，破坏下游 PCA 和分布分析。
+        下游使用时需按物种分别 dropna，不能对全表 dropna。
+      - 最终写出 te_results_final.csv，行=样本，列=各物种基因的并集
+
+    参数:
+      species_te_files: {species: csv_path}
+      annotation_csv:   sample_annotation.csv 路径，用于添加 'all' 行
+    """
+    frames = []
+    for sp, fpath in sorted(species_te_files.items()):
+        if not fpath or not os.path.exists(fpath):
+            print(f"[Merge] 跳过 {sp}: 文件不存在 ({fpath})")
+            continue
+        df = pd.read_csv(fpath, index_col=0)
+        print(f"[Merge] {sp}: {df.shape[0]} samples × {df.shape[1]} genes")
+        frames.append(df)
+
+    if not frames:
+        print("[Merge] 错误: 没有任何物种 TE 文件可合并")
         return None
 
-    print(f"  [OK] {final_out}")
+    merged = pd.concat(frames, axis=0, join="outer")
+    print(f"[Merge] 合并后: {merged.shape[0]} samples × {merged.shape[1]} genes")
+
+    final_out = os.path.join(output_dir, "te_results_final.csv")
+    merged.to_csv(final_out)
+    print(f"[Merge] [OK] {final_out}")
     return final_out
 
 
@@ -986,14 +1134,29 @@ def main() -> None:
 
     os.makedirs(output_dir, exist_ok=True)
 
-    # -- Stage 0: Extract -------------------------------------------------
+    # -- Stage 0: Extract (按物种分组) ------------------------------------
     if not args.skip_extract:
         if not args.ribo_dir:
             print("错误: 需要 --ribo_dir 或 --skip_extract", file=sys.stderr)
             sys.exit(1)
-        stage0_extract(args.ribo_dir, output_dir)
+        species_data = stage0_extract(args.ribo_dir, output_dir)
+        available_species = list(species_data.keys())
     else:
-        print("[Stage 0] 跳过 (使用已有 ribo_raw.csv / rnaseq_raw.csv)")
+        # skip_extract 模式: 扫描已有的 ribo_raw_{species}.csv 文件
+        import glob as _glob
+        raw_files = _glob.glob(os.path.join(output_dir, "ribo_raw_*.csv"))
+        available_species = [
+            os.path.basename(f).replace("ribo_raw_", "").replace(".csv", "")
+            for f in raw_files
+        ]
+        if not available_species:
+            print("[Stage 0] 跳过 — 未找到 ribo_raw_{species}.csv，"
+                  "尝试旧格式 ribo_raw.csv")
+            available_species = [""]
+        else:
+            print(f"[Stage 0] 跳过 — 发现已有物种文件: {available_species}")
+
+    print(f"\n[主流程] 将按物种分别计算 TE: {available_species}")
 
     # -- Stage 0.5: Build pairing (if metadata provided) -------------------
     pairing = None
@@ -1011,40 +1174,75 @@ def main() -> None:
         print("警告: --metadata_csv 和 --mapping_csv 必须同时提供，"
               "忽略配对验证", file=sys.stderr)
 
-    # -- Stage 1: Preprocess ----------------------------------------------
-    stage1_preprocess(
-        output_dir,
-        cpm_cutoff=args.cpm_cutoff,
-        overall_cutoff=args.overall_cutoff,
-        nonpolya_csv=args.nonpolya_csv,
-        pairing=pairing,
-    )
+    # -- Stage 1 → 2 → 3: 按物种逐一执行 ---------------------------------
+    species_te_files: dict[str, str] = {}
+    stage2_failures: list[str] = []
 
-    # -- Stage 2: TE.R ----------------------------------------------------
-    if not args.skip_r:
-        success = stage2_run_te_r(output_dir)
-        if not success:
-            print("[警告] Stage 2 未成功，跳过 Stage 3")
-            print("  预处理文件已保存，可手动运行:")
-            print(f"  Rscript {TE_R_PATH} {output_dir}")
-            sys.exit(1)
-    else:
-        print("[Stage 2] 跳过 R 脚本执行")
+    for sp in available_species:
+        sp_label = sp or "(default)"
+        print(f"\n{'─' * 70}")
+        print(f"  [物种] {sp_label}")
+        print(f"{'─' * 70}")
 
-    # -- Stage 3: Postprocess ---------------------------------------------
-    if not args.skip_r:
-        info_csv = args.info_csv or os.path.join(output_dir, "infor_filter.csv")
-        final_path = stage3_postprocess(output_dir, info_csv)
-        if final_path:
-            print(f"\n{'=' * 70}")
-            print(f"  TE 计算完成 → {final_path}")
-            print(f"{'=' * 70}")
+        # Stage 1
+        try:
+            stage1_preprocess(
+                output_dir,
+                cpm_cutoff=args.cpm_cutoff,
+                overall_cutoff=args.overall_cutoff,
+                nonpolya_csv=args.nonpolya_csv,
+                pairing=pairing,
+                species=sp,
+            )
+        except FileNotFoundError as e:
+            print(f"[Stage 1] 跳过 {sp_label}: {e}")
+            continue
+
+        # Stage 2
+        if not args.skip_r:
+            success = stage2_run_te_r(output_dir, species=sp)
+            if not success:
+                print(f"[警告] Stage 2 失败 ({sp_label})，跳过该物种")
+                print(f"  可手动运行: Rscript {TE_R_PATH} <work_dir>")
+                stage2_failures.append(sp_label)
+                continue
         else:
-            print("[警告] Stage 3 后处理未生成最终文件")
+            print(f"[Stage 2] 跳过 R 脚本 ({sp_label})")
+            continue
+
+        # Stage 3
+        sp_csv = stage3_postprocess(output_dir, species=sp)
+        if sp_csv:
+            species_te_files[sp] = sp_csv
+        else:
+            print(f"[警告] Stage 3 未生成文件 ({sp_label})")
+
+    # -- 最终合并: 跨物种 TE → te_results_final.csv -----------------------
+    if not args.skip_r:
+        if species_te_files:
+            final_path = merge_cross_species_te(species_te_files, output_dir)
+            if final_path:
+                print(f"\n{'=' * 70}")
+                print(f"  TE 计算完成 → {final_path}")
+                if stage2_failures:
+                    print(f"  [注意] 以下物种 Stage 2 失败，未纳入最终结果:")
+                    for sp_label in stage2_failures:
+                        print(f"    - {sp_label}")
+                print(f"{'=' * 70}")
+            else:
+                print("[警告] 跨物种合并未生成最终文件")
+        else:
+            print("[警告] 没有任何物种成功完成 Stage 3")
     else:
         print(f"\n{'=' * 70}")
         print(f"  预处理完成 (已跳过 R 脚本)")
         print(f"  中间文件位于: {output_dir}")
+        if available_species:
+            print(f"  物种列表: {available_species}")
+            for sp in available_species:
+                suffix = f"_{sp}" if sp else ""
+                print(f"  手动运行: Rscript {TE_R_PATH} "
+                      f"{output_dir}/_te_workdir{suffix}")
         print(f"{'=' * 70}")
 
 

@@ -1,0 +1,37 @@
+sample_id,GSE,species,cell_type,tissue,ribo_type
+GSE102659_all,GSE102659,mouse,C57BL/6,mouse liver,RNA-Seq
+GSE105082_all,GSE105082,human,HeLa,ATCC Cell Lines,RNA-Seq
+GSE109122_all,GSE109122,arabidopsis,unknown,rna_blue_rep2,RNA-Seq
+GSE112187_all,GSE112187,mouse,19PP,19PP B cell lymphoma,Ribo-Seq
+GSE112502_all,GSE112502,mouse,FVB/N,Dentate gyrus,Ribo-Seq
+GSE112705_all,GSE112705,human,unknown,tumor_RPF,Ribo-Seq
+GSE114064_all,GSE114064,mouse,unknown,CAMKIIa-Ribotag mouse Brain,Ribo-Seq
+GSE114636_all,GSE114636,human,A549,A549 cells,RNA-Seq
+GSE114741_all,GSE114741,mouse,C57BL6,"purified lymph node CD4+ T cell, 12 week old WT/WT mouse",RNA-Seq
+GSE115647_all,GSE115647,human,SW480,SW480 cell lines,Ribo-Seq
+GSE116233_all,GSE116233,mouse,C57BL/6,Hippocampus,Ribo-Seq
+GSE124693_all,GSE124693,mouse,AgRP+ ARH neurons,AgRP+ ARH neurons,Ribo-Seq
+GSE125038_all,GSE125038,yeast,yJW1863,yeast cell lysate,RNA-Seq
+GSE125086_all,GSE125086,human,HeLa,"24 h-treated, HeLa cells",RNA-Seq
+GSE126298_all,GSE126298,human,HEK293T,HEK293T,Ribo-Seq
+GSE127713_all,GSE127713,human,Huh-7.5,heptoma cells,Ribo-Seq
+GSE131536_all,GSE131536,mouse,brain,brain,Ribo-Seq
+GSE132441_all,GSE132441,arabidopsis,youngest leaves,Mitochondria,RNA-Seq
+GSE22004_all,GSE22004,human,Hela,HeLa,RNA-Seq
+GSE48603_all,GSE48603,human,Caco-2,Caco-2 cell line,RNA-Seq
+GSE50597_all,GSE50597,arabidopsis,transgenics 35S:HF-RPL18B line 12-2-4,"7 d.o. whole seedlings, 2 hr. normoxia, total mRNAs",RNA-Seq
+GSE51584_all,GSE51584,human,U2-OS,U2OS cells,Ribo-Seq
+GSE51619_all,GSE51619,mouse,embryonic 14.5day,kidney,Ribo-Seq
+GSE55195_all,GSE55195,human,Hek293T,Hek293T,RNA-Seq
+GSE59821_all,GSE59821,human,kidney,Kidney tissue,RNA-Seq
+GSE62148_all,GSE62148,mouse,HuRflox/flox x mb1wt,Splenic B cells,RNA-Seq
+GSE64962_all,GSE64962,human,BJ,Human fibroblast,Ribo-Seq
+GSE65885_all,GSE65885,human,MCF10A-ER-Src,Breast epithelial cell,Ribo-Seq
+GSE66810_all,GSE66810,human,human primary macrophages,human primary macrophages,RNA-Seq
+GSE69602_all,GSE69602,human,DENV2 (M29095.1),Huh7 cells,Ribo-Seq
+GSE74365_all,GSE74365,human,CFBE,Homo sapiens,RNA-Seq
+GSE80156_all,GSE80156,mouse,MEF,Mouse Embryonc Fibroblasts,RNA-Seq
+GSM1224478,GSE50597,arabidopsis,transgenics 35S:HF-RPL18B line 12-2-4,"7 d.o. whole seedlings, 2 hr. normoxia, immunoprecipitate (TRAP)-ribosome footprints",Ribo-Seq
+GSM3561545,GSE125038,yeast,yJW1864,yeast cell lysate,Ribo-Seq
+PRJNA390535_all,PRJNA390535,human,NCI-H1299,unknown,RNA-Seq
+all,unknown,unknown,unknown,unknown,merged_ribo

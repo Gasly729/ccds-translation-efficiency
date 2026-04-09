@@ -31,6 +31,7 @@ data/interim/**
 !data/interim/.gitkeep
 data/processed/**
 !data/processed/.gitkeep
+!data/processed/sample_annotation.csv
 data/external/*
 !data/external/.gitkeep
 !data/external/metadata/
@@ -41,10 +42,11 @@ logs/*
 !logs/.gitkeep
 *.log
 
-# Snakemake
+# Snakemake / Nextflow
 .snakemake/
 workflow/snakescale/.snakemake/
 workflow/snakescale/.nextflow.log
+workflow/snakescale/.nextflow.log.*
 workflow/snakescale/.nextflow/
 workflow/snakescale/nextflow_logs/
 workflow/snakescale/work/
@@ -73,10 +75,9 @@ models/*
 Thumbs.db
 
 # Strict source-only release filter
-# 1. 忽略所有数据和中间产物目录
+# 1. 忽略所有数据和中间产物目录（data/processed/ 使用 ** 而非目录本身，以允许文件级例外）
 data/raw/
 data/interim/
-data/processed/
 workflow/snakescale/reference/
 workflow/snakescale/nextflow_logs/
 workflow/snakescale/.snakemake/
@@ -98,3 +99,11 @@ reports/figures/
 *.pdf
 *.html
 *.txt
+
+# R session artifacts
+.Rhistory
+.RData
+*.Rout
+
+# 3. 例外覆盖（必须放在所有 *.csv 规则之后才能生效）
+!data/processed/sample_annotation.csv
